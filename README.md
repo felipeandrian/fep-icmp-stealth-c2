@@ -1,8 +1,3 @@
-Aqui está um modelo de **README.md** profissional, formatado em Markdown, pronto para copiar e colar no teu repositório GitHub.
-
-Foquei numa linguagem técnica, adequada para investigadores de segurança (Red/Blue Teams), e incluí secções detalhadas de análise de deteção como pediste.
-
------
 
 # FEP ICMP Stealth C2 (PoC)
 
