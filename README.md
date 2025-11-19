@@ -35,7 +35,7 @@ O projeto implementa múltiplas camadas de ofuscação para evadir sistemas de d
 
 ```bash
 git clone https://github.com/felipeandrian/fep-icmp-stealth-c2.git
-cd icmp-stealth-c2
+cd fep-icmp-stealth-c2
 ```
 
 -----
