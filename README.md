@@ -1,9 +1,10 @@
 
+````markdown
 # FEP ICMP Stealth C2 (PoC)
 
 > **Aviso Legal:** Este software foi desenvolvido apenas para fins educacionais e de pesquisa em cibersegurança. O uso deste código em redes ou sistemas sem autorização explícita é ilegal e antiético. O autor não se responsabiliza por mau uso.
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 O **FEP ICMP Stealth C2** é uma Prova de Conceito (PoC) de um canal de Comando e Controle (C2) encoberto que opera exclusivamente sobre o protocolo **ICMP** (Ping).
 
@@ -11,36 +12,40 @@ Diferente de C2s tradicionais que utilizam TCP/UDP (HTTP, DNS), este projeto uti
 
 O projeto implementa múltiplas camadas de ofuscação para evadir sistemas de deteção (IDS/IPS) básicos, incluindo criptografia XOR, *Nibble Encoding* para simular payloads legítimos e *Jitter* temporal.
 
------
-
-##  Funcionalidades Principais
-
-  * **Protocolo Connectionless:** Comunicação via ICMP Type 8 (Echo Request), sem necessidade de handshake TCP.
-  * **Criptografia Leve:** Ofuscação de payload via **XOR** para evitar deteção de strings (DLP).
-  * **Camuflagem "Camaleão":** Implementa **Nibble Encoding**, convertendo dados binários em caracteres ASCII (`a-p`). Isso reduz a entropia visual e mimetiza o padrão de preenchimento de pings padrão do Windows/Linux.
-  * **Evasão Comportamental (Jitter):** Introduz atrasos aleatórios (`3.0s` a `10.0s`) entre heartbeats para evitar deteção por análise de frequência fixa.
-  * **Arquitetura Assíncrona:** O servidor utiliza multithreading para escutar a rede e aceitar input do operador simultaneamente.
+O repositório inclui implementações em **Python** (Moderna) e **Perl** (Legacy/Nativa) para garantir versatilidade em diferentes ambientes.
 
 -----
 
-## 🛠️ Instalação e Requisitos
+## Funcionalidades Principais
+
+* **Protocolo Connectionless:** Comunicação via ICMP Type 8 (Echo Request), sem necessidade de handshake TCP.
+* **Criptografia Leve:** Ofuscação de payload via **XOR** para evitar deteção de strings (DLP).
+* **Camuflagem "Camaleão":** Implementa **Nibble Encoding**, convertendo dados binários em caracteres ASCII (`a-p`). Isso reduz a entropia visual e mimetiza o padrão de preenchimento de pings padrão do Windows/Linux.
+* **Evasão Comportamental (Jitter):** Introduz atrasos aleatórios (`3.0s` a `10.0s`) entre heartbeats para evitar deteção por análise de frequência fixa.
+* **Arquitetura Assíncrona:** O servidor utiliza multithreading para escutar a rede e aceitar input do operador simultaneamente.
+
+-----
+
+## Instalação e Requisitos
 
 ### Pré-requisitos
 
-  * **Sistema Operacional:** Linux (Recomendado) ou Windows.
-  * **Python:** Versão 3.6 ou superior.
-  * **Privilégios:** É necessário acesso **Root/Sudo** (Linux) ou **Administrador** (Windows) devido à utilização de `SOCK_RAW`.
+* **Sistema Operacional:** Linux (Recomendado) ou Windows.
+* **Linguagens:**
+    * **Python:** Versão 3.6 ou superior.
+    * **Perl:** Versão 5+ (Geralmente nativo na maioria das distros Linux).
+* **Privilégios:** É necessário acesso **Root/Sudo** (Linux) ou **Administrador** (Windows) devido à utilização de `SOCK_RAW`.
 
 ### Clonar o Repositório
 
 ```bash
-git clone https://github.com/felipeandrian/fep-icmp-stealth-c2.git
+git clone [https://github.com/felipeandrian/fep-icmp-stealth-c2.git](https://github.com/felipeandrian/fep-icmp-stealth-c2.git)
 cd fep-icmp-stealth-c2
-```
+````
 
 -----
 
-##  Guia de Uso
+## Guia de Uso (Python)
 
 ### 1\. Iniciar o Servidor (C2)
 
@@ -81,6 +86,25 @@ drwxr-xr-x 2 user user 4096 ...
 
 -----
 
+## Versão Perl (Legacy/Native Support)
+
+O projeto inclui uma implementação completa em **Perl** para ambientes onde Python não está disponível ou onde se deseja utilizar binários nativos do sistema (*Living off the Land*).
+
+**Funcionalidades:** Mesma paridade com a versão Python (XOR, Encoding, Jitter).
+
+### Uso (Perl)
+
+```bash
+# Lado do Servidor (Atacante)
+sudo perl servidor.pl
+
+# Lado do Agente (Vítima)
+# Edite a variável $HACKER_IP dentro do script antes de rodar
+sudo perl agente.pl
+```
+
+-----
+
 ## 🛡️ Análise de Segurança (Red vs Blue Team)
 
 Esta secção detalha as capacidades de evasão e os vetores de deteção da ferramenta.
@@ -105,13 +129,15 @@ Esta secção detalha as capacidades de evasão e os vetores de deteção da fer
 3.  **Behavioral Analytics (UEBA/Beaconing):**
       * Mesmo com Jitter, a comunicação contínua e prolongada entre um host interno e um IP público único (sem rotação de infraestrutura) será classificada como comportamento de *Beaconing* por SIEMs avançados.
 4.  **Fingerprinting de Protocolo:**
-      * O cabeçalho ICMP é construído manualmente via `struct`. Pequenas discrepâncias nos campos de cabeçalho (Checksum, Sequence Number, TTL) comparadas com a implementação nativa do SO podem ser detectadas por ferramentas de *Passive OS Fingerprinting*.
-	  
-Obs. Uma versão real seria muito mais robusta e evitaria a maioria dessas detecções.
+      * O cabeçalho ICMP é construído manualmente via `struct` (Python) ou `pack` (Perl). Pequenas discrepâncias nos campos de cabeçalho (Checksum, Sequence Number, TTL) comparadas com a implementação nativa do SO podem ser detectadas por ferramentas de *Passive OS Fingerprinting*.
+
+> **Obs:** Uma versão real (weaponized) utilizaria rotação de IPs, payloads DNS e imitação de cabeçalhos OS-specific para evitar estas detecções.
 
 -----
 
-##  Estrutura do Código
+## 📂 Estrutura do Código
+
+### Python (Implementação Principal)
 
   * **`cliente_c2.py`**: Script do lado da vítima.
       * Implementa loop infinito de *Beaconing*.
@@ -119,7 +145,12 @@ Obs. Uma versão real seria muito mais robusta e evitaria a maioria dessas detec
       * Aplica Jitter (`random.uniform`).
   * **`servidor_c2.py`**: Script do lado do atacante.
       * Utiliza `threading` para separar a escuta de rede (Listener) da interface de usuário (Input).
-      * Mantém estado dos comandos pendentes até o próximo check-in do agente.
+      * Mantém estado dos comandos pendentes.
+
+### Perl (Implementação Alternativa)
+
+  * **`agente.pl`**: Versão do cliente em Perl. Ideal para servidores Linux sem Python 3 instalado.
+  * **`servidor.pl`**: Versão do servidor em Perl utilizando `threads`.
 
 -----
 
@@ -136,3 +167,5 @@ Obs. Uma versão real seria muito mais robusta e evitaria a maioria dessas detec
 ## 📄 Licença
 
 Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+
+```
