@@ -1,5 +1,4 @@
 
-````markdown
 # FEP ICMP Stealth C2 (PoC)
 
 > **Aviso Legal:** Este software foi desenvolvido apenas para fins educacionais e de pesquisa em cibersegurança. O uso deste código em redes ou sistemas sem autorização explícita é ilegal e antiético. O autor não se responsabiliza por mau uso.
@@ -168,5 +167,4 @@ Esta secção detalha as capacidades de evasão e os vetores de deteção da fer
 
 Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
-```
 ```
