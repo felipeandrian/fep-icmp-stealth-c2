@@ -106,7 +106,7 @@ sudo perl agente.pl
 
 ## 🛡️ Análise de Segurança (Red vs Blue Team)
 
-Esta secção detalha as capacidades de evasão e os vetores de deteção da ferramenta.
+Esta seção detalha as capacidades de evasão e os vetores de deteção da ferramenta.
 
 ### 🟢 O que Escapa à Deteção (Evasão)
 
